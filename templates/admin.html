@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Admin Panel - Return Management</h2>
+
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Seller</th>
+        <th>Customer</th>
+        <th>Purchase Date</th>
+        <th>Product</th>
+        <th>Reason</th>
+        <th>Status</th>
+        <th>Comment</th>
+        <th>Action</th>
+    </tr>
+    {% for return in returns %}
+    <tr>
+        <td>{{ return.id }}</td>
+        <td>{{ return.seller_name }}</td>
+        <td>{{ return.customer_name }} {{ return.customer_surname }}</td>
+        <td>{{ return.purchase_date }}</td>
+        <td>{{ return.product_name }}</td>
+        <td>{{ return.reason }}</td>
+        <td>{{ return.status }}</td>
+        <td>{{ return.comment or '' }}</td>
+        <td>
+            <form method="POST" action="/update/{{ return.id }}">
+                <select name="status">
+                    <option value="pending">Pending</option>
+                    <option value="approved">Approved</option>
+                    <option value="rejected">Rejected</option>
+                </select>
+                <input type="text" name="comment" placeholder="Admin comment" value="{{ return.comment or '' }}">
+                <button type="submit">Update</button>
+            </form>
+        </td>
+    </tr>
+    {% endfor %}
+</table>
+
+<h2>Sellers</h2>
+<table>
+    <tr>
+        <th>ID</th>
+        <th>Name</th>
+        <th>Type</th>
+    </tr>
+    {% for seller in sellers %}
+    <tr>
+        <td>{{ seller.id }}</td>
+        <td>{{ seller.name }}</td>
+        <td>{{ seller.user_type }}</td>
+    </tr>
+    {% endfor %}
+</table>
+{% endblock %}
