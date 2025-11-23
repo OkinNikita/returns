@@ -1,0 +1,6 @@
+id,purchase_date,product_name,reason,status,comment,created_at,updated_at,seller_name,customer_first_name,customer_last_name,customer_email,admin_name,seller_name,customer_name,admin_name
+1,2024-01-15,"MacBook Pro 16""",Screen has dead pixels,pending,,2025-11-16T20:15:40.106187,2025-11-16T20:15:40.106187,,,,michael.johnson@email.com,,,Michael Johnson,
+2,2024-01-12,iPhone 15 Pro,Battery draining too fast,pending,,2025-11-16T20:15:40.106187,2025-11-16T20:15:40.106187,,,,sarah.williams@email.com,,,Sarah Williams,
+3,2024-01-10,Samsung Galaxy S24,Camera not focusing properly,pending,,2025-11-16T20:15:40.106187,2025-11-16T20:15:40.106187,,,,david.miller@email.com,,,David Miller,
+4,2024-01-08,Sony WH-1000XM5,Right earphone not working,pending,,2025-11-16T20:15:40.106187,2025-11-16T20:15:40.106187,,,,lisa.anderson@email.com,,,Lisa Anderson,
+5,2024-01-05,iPad Air,Touch screen unresponsive,pending,,2025-11-16T20:15:40.106187,2025-11-16T20:15:40.106187,,,,robert.taylor@email.com,,,Robert Taylor,

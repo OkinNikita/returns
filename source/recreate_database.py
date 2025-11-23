@@ -1,15 +1,14 @@
 from database import get_db
 
-def init_db():
-
+def recreate_database():
     conn = get_db()
     cur = conn.cursor()
 
-    cur.execute('DROP TABLE IF EXISTS returns CASCADE')
-    cur.execute('DROP TABLE IF EXISTS customers CASCADE')
-    cur.execute('DROP TABLE IF EXISTS users CASCADE')
+    print("Recreating database tables")
 
-    print("Creating tables")
+    cur.execute("DROP TABLE IF EXISTS returns CASCADE")
+    cur.execute("DROP TABLE IF EXISTS customers CASCADE")
+    cur.execute("DROP TABLE IF EXISTS users CASCADE")
 
     cur.execute('''
                 CREATE TABLE users (
@@ -37,16 +36,24 @@ def init_db():
     cur.execute('''
                 CREATE TABLE returns (
                                          id SERIAL PRIMARY KEY,
-                                         seller_id INTEGER NOT NULL REFERENCES users(id) ON DELETE RESTRICT,
-                                         customer_id INTEGER NOT NULL REFERENCES customers(id) ON DELETE RESTRICT,
-                                         admin_id INTEGER REFERENCES users(id) ON DELETE SET NULL,
+                                         seller_id INTEGER NOT NULL,
+                                         customer_id INTEGER NOT NULL,
+                                         admin_id INTEGER,
                                          purchase_date DATE NOT NULL,
                                          product_name VARCHAR(100) NOT NULL,
                                          reason TEXT NOT NULL,
                                          status VARCHAR(20) DEFAULT 'pending' CHECK (status IN ('pending', 'approved', 'rejected')),
                                          comment TEXT,
                                          created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-                                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+                                         updated_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+                                         CONSTRAINT fk_returns_seller
+                                             FOREIGN KEY (seller_id) REFERENCES users(id) ON DELETE RESTRICT,
+
+                                         CONSTRAINT fk_returns_customer
+                                             FOREIGN KEY (customer_id) REFERENCES customers(id) ON DELETE RESTRICT,
+
+                                         CONSTRAINT fk_returns_admin
+                                             FOREIGN KEY (admin_id) REFERENCES users(id) ON DELETE SET NULL
                 )
                 ''')
     print("Created 'returns' table with foreign keys")
@@ -66,7 +73,7 @@ def init_db():
             "INSERT INTO users (name, user_type, email) VALUES (%s, %s, %s)",
             (name, user_type, email)
         )
-        print(f"Added user: {name} ({user_type})")
+        print(f"Added user: {name}")
 
     customers_data = [
         ('Michael', 'Johnson', 'michael.johnson@email.com', '+1-555-0101'),
@@ -102,12 +109,7 @@ def init_db():
     cur.close()
     conn.close()
 
-    print("Database initialized successfully!")
-    print("Sample data added:")
-    print("   - 5 users (4 sellers, 1 admin)")
-    print("   - 5 customers")
-    print("   - 5 return requests")
-    print("   - All relationships established")
+    print("Database recreated successfully with all tables and relationships")
 
 if __name__ == '__main__':
-    init_db()
+    recreate_database()

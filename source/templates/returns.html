@@ -3,30 +3,30 @@
 {% block content %}
 <h2>Create Return Request</h2>
 
-{% if not sellers %}
+{% if not sellers or not customers %}
 <div style="background: #f8d7da; color: #721c24; padding: 15px; border-radius: 5px; margin: 20px 0;">
-    <strong>No sellers found!</strong> Please initialize the database first.
+    <strong>Missing data!</strong> Please check if database has sellers and customers.
 </div>
 {% else %}
 <form method="POST" action="/returns">
     <p>
         <label>Seller:</label>
-        <select name="seller_name" required>
+        <select name="seller_id" required>
             <option value="">Select Seller</option>
             {% for seller in sellers %}
-            <option value="{{ seller.name }}">{{ seller.name }}</option>
+            <option value="{{ seller.id }}">{{ seller.name }}</option>
             {% endfor %}
         </select>
     </p>
 
     <p>
-        <label>Customer Name:</label>
-        <input type="text" name="customer_name" placeholder="Enter customer name" required>
-    </p>
-
-    <p>
-        <label>Customer Surname:</label>
-        <input type="text" name="customer_surname" placeholder="Enter customer surname" required>
+        <label>Customer:</label>
+        <select name="customer_id" required>
+            <option value="">Select Customer</option>
+            {% for customer in customers %}
+            <option value="{{ customer.id }}">{{ customer.first_name }} {{ customer.last_name }}</option>
+            {% endfor %}
+        </select>
     </p>
 
     <p>
@@ -41,7 +41,7 @@
 
     <p>
         <label>Return Reason:</label><br>
-        <textarea name="reason" rows="4" cols="50" placeholder="Describe the reason for return" required></textarea>
+        <textarea name="reason" rows="4" cols="50" placeholder="Describe the reason for return..." required></textarea>
     </p>
 
     <button type="submit">Create Return Request</button>
@@ -55,20 +55,22 @@
         <th>ID</th>
         <th>Seller</th>
         <th>Customer</th>
-        <th>Purchase Date</th>
         <th>Product</th>
+        <th>Purchase Date</th>
         <th>Reason</th>
         <th>Status</th>
+        <th>Created</th>
     </tr>
     {% for return in returns %}
     <tr>
         <td>{{ return.id }}</td>
         <td>{{ return.seller_name }}</td>
-        <td>{{ return.customer_name }} {{ return.customer_surname }}</td>
-        <td>{{ return.purchase_date }}</td>
+        <td>{{ return.customer_first_name }} {{ return.customer_last_name }}</td>
         <td>{{ return.product_name }}</td>
+        <td>{{ return.purchase_date }}</td>
         <td>{{ return.reason }}</td>
         <td>{{ return.status }}</td>
+        <td>{{ return.created_at.strftime('%Y-%m-%d') if return.created_at else '' }}</td>
     </tr>
     {% endfor %}
 </table>

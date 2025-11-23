@@ -8,51 +8,54 @@
         <th>ID</th>
         <th>Seller</th>
         <th>Customer</th>
-        <th>Purchase Date</th>
         <th>Product</th>
+        <th>Purchase Date</th>
         <th>Reason</th>
         <th>Status</th>
+        <th>Admin</th>
         <th>Comment</th>
-        <th>Action</th>
+        <th>Actions</th>
     </tr>
     {% for return in returns %}
     <tr>
         <td>{{ return.id }}</td>
         <td>{{ return.seller_name }}</td>
-        <td>{{ return.customer_name }} {{ return.customer_surname }}</td>
-        <td>{{ return.purchase_date }}</td>
+        <td>{{ return.customer_first_name }} {{ return.customer_last_name }}</td>
         <td>{{ return.product_name }}</td>
+        <td>{{ return.purchase_date }}</td>
         <td>{{ return.reason }}</td>
-        <td>{{ return.status }}</td>
-        <td>{{ return.comment or '' }}</td>
         <td>
-            <form method="POST" action="/update/{{ return.id }}">
-                <select name="status">
+            <span style="
+                padding: 3px 8px;
+                border-radius: 4px;
+                font-weight: bold;
+                {% if return.status == 'approved' %}background: #d4edda; color: #155724;{% endif %}
+                {% if return.status == 'rejected' %}background: #f8d7da; color: #721c24;{% endif %}
+                {% if return.status == 'pending' %}background: #fff3cd; color: #856404;{% endif %}
+            ">
+                {{ return.status }}
+            </span>
+        </td>
+        <td>{{ return.admin_name or 'Not assigned' }}</td>
+        <td>{{ return.comment or 'No comment' }}</td>
+        <td>
+            <form method="POST" action="/update_return/{{ return.id }}">
+                <select name="status" style="margin-bottom: 5px;">
                     <option value="pending">Pending</option>
                     <option value="approved">Approved</option>
                     <option value="rejected">Rejected</option>
                 </select>
-                <input type="text" name="comment" placeholder="Admin comment" value="{{ return.comment or '' }}">
-                <button type="submit">Update</button>
+                <input type="text" name="comment" placeholder="Admin comment" value="{{ return.comment or '' }}" style="width: 200px; margin-bottom: 5px;">
+                <button type="submit" style="padding: 5px 10px;">Update</button>
             </form>
         </td>
     </tr>
     {% endfor %}
 </table>
 
-<h2>Sellers</h2>
-<table>
-    <tr>
-        <th>ID</th>
-        <th>Name</th>
-        <th>Type</th>
-    </tr>
-    {% for seller in sellers %}
-    <tr>
-        <td>{{ seller.id }}</td>
-        <td>{{ seller.name }}</td>
-        <td>{{ seller.user_type }}</td>
-    </tr>
-    {% endfor %}
-</table>
+<h2>Statistics</h2>
+<p>Total Returns: {{ returns|length }}</p>
+<p>Pending: {{ returns|selectattr('status', 'equalto', 'pending')|list|length }}</p>
+<p>Approved: {{ returns|selectattr('status', 'equalto', 'approved')|list|length }}</p>
+<p>Rejected: {{ returns|selectattr('status', 'equalto', 'rejected')|list|length }}</p>
 {% endblock %}
